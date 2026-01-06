@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Any
-from ai_collab_analyzer.models.perspectives import PerspectiveResult, CodeEntity, DimensionScore
+from ai_collab_analyzer.models.perspectives import PerspectiveResult, CodeEntity, DimensionScore, Finding, Severity
 
 class BasePerspective(ABC):
     """
@@ -30,3 +30,15 @@ class BasePerspective(ABC):
             
         weighted_score = sum(d.score * d.weight for d in dimensions) / total_weight
         return min(100.0, max(0.0, weighted_score))
+
+    def _empty_result(self, message: str) -> PerspectiveResult:
+        """
+        Provides a default empty result for cases where analysis fails or is skipped.
+        """
+        return PerspectiveResult(
+            perspective_name=self.get_name(),
+            score=0,
+            dimensions=[],
+            findings=[Finding("Analysis Error", message, Severity.LOW)],
+            recommendations=[]
+        )

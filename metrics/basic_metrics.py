@@ -13,7 +13,13 @@ class MetricsCalculator:
     
     def calculate_fix_ratio(self, commits: List[Commit]) -> float:
         """
-        Calculate the ratio of fix commits to total commits.
+        Determine the proportion of commits that are classified as bug fixes.
+        
+        Args:
+            commits: A chronological list of commits to evaluate.
+            
+        Returns:
+            A value between 0.0 and 1.0 representing the fix/total ratio.
         """
         if not commits:
             return 0.0
@@ -25,8 +31,13 @@ class MetricsCalculator:
 
     def calculate_churn_rate(self, file_history: FileHistory) -> float:
         """
-        Calculate churn rate for a file.
-        Returns average lines changed per commit.
+        Fetch the pre-calculated churn rate from a file's history records.
+        
+        Args:
+            file_history: The FileHistory instance for a specific code entity.
+            
+        Returns:
+            The average number of lines changed per modification event.
         """
         return file_history.get_churn_rate()
 

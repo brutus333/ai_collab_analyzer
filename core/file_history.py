@@ -61,11 +61,15 @@ class FileHistory:
 
     @property
     def last_modified(self) -> Optional[datetime]:
+        """Return the date of the most recent commit to this file."""
         return self._last_modified
 
     def get_churn_rate(self) -> float:
         """
-        Calculate churn rate: avg lines changed per commit.
+        Calculate churn rate (average lines changed per commit).
+        
+        Returns:
+            Mean number of lines added/deleted per modification event.
         """
         if not self.commits:
             return 0.0
@@ -73,7 +77,9 @@ class FileHistory:
 
     def get_change_frequency(self) -> float:
         """
-        Calculate change frequency.
-        For now, returning total number of commits as a simple frequency metric.
+        Calculate change frequency (total commit count).
+        
+        Returns:
+            The number of commits that have modified this file.
         """
         return float(len(self.commits))

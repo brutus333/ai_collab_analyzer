@@ -71,9 +71,8 @@ class NetworkVisualizer:
                 size=10,
                 colorbar=dict(
                     thickness=15,
-                    title='Node Connections',
-                    xanchor='left',
-                    titleside='right'
+                    title={'text': 'Node Connections', 'side': 'right'},
+                    xanchor='left'
                 ),
                 line_width=2))
                 
@@ -86,8 +85,7 @@ class NetworkVisualizer:
 
         fig = go.Figure(data=[edge_trace, node_trace],
              layout=go.Layout(
-                title='Temporal Coupling Network',
-                titlefont_size=16,
+                title={'text': 'Temporal Coupling Network', 'font': {'size': 16}},
                 showlegend=False,
                 hovermode='closest',
                 margin=dict(b=20,l=5,r=5,t=40),

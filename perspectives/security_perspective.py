@@ -98,11 +98,3 @@ class SecurityPerspective(BasePerspective):
             recommendations=recommendations
         )
 
-    def _empty_result(self, message: str) -> PerspectiveResult:
-        return PerspectiveResult(
-            perspective_name=self.get_name(),
-            score=0,
-            dimensions=[],
-            findings=[Finding("Analysis Error", message, Severity.LOW)],
-            recommendations=[]
-        )

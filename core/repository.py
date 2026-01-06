@@ -31,8 +31,10 @@ class Repository:
         
     def add_commits(self, commits: List[Commit]):
         """
-        Add a list of commits to the repository.
-        Populates file histories based on the commits.
+        Add a list of commits to the repository and update file histories.
+        
+        Args:
+            commits: A list of Commit objects to be added to the repository's history.
         """
         # Append commits to the main list
         self._commits.extend(commits)
@@ -51,12 +53,12 @@ class Repository:
                 
     def get_file_history(self, filepath: str) -> Optional[FileHistory]:
         """
-        Get the history for a specific file.
+        Retrieve the historical record for a specific file path.
         
         Args:
-            filepath: Path of the file relative to repo root.
+            filepath: The relative path of the file from the repository root.
             
         Returns:
-            FileHistory object or None if file not found.
+            A FileHistory instance if the file was found in the history, else None.
         """
         return self._file_histories.get(filepath)
