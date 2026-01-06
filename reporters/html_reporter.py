@@ -4,6 +4,7 @@ from ..analyzers.health_analyzer import HealthAnalyzer
 from ..visualizers.chart_builder import ChartBuilder
 from ..visualizers.network_visualizer import NetworkVisualizer
 from ..core.repository import Repository
+from ..visualizers.radar_chart_builder import RadarChartBuilder
 import json
 import os
 
@@ -15,6 +16,7 @@ class HTMLReporter:
     def __init__(self):
         self.chart_builder = ChartBuilder()
         self.network_visualizer = NetworkVisualizer()
+        self.radar_builder = RadarChartBuilder()
         
     def generate_report(self, repository: Repository, analysis_result: Dict[str, Any]):
         """
@@ -54,6 +56,66 @@ class HTMLReporter:
                 <h2>Summary</h2>
                 <p>{summary}</p>
                 <div class="score">Health Score: {health_score:.2f}</div>
+            </div>
+
+            <div class="section">
+                <h2>Code Quality Perspectives</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Composite Quality</h3>
+                        <div class="score" style="color: {'green' if analysis_result.get('composite_quality_score', 0) > 70 else 'orange' if analysis_result.get('composite_quality_score', 0) > 40 else 'red'}">
+                            {analysis_result.get('composite_quality_score', 0):.1f}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 400px;">
+                        {self.radar_builder.create_perspective_radar(analysis_result.get('perspective_scores', {}))}
+                    </div>
+                    <div style="flex: 1; min-width: 400px;">
+                        <h3>Critical Quality Findings</h3>
+                        <table>
+                            <tr>
+                                <th>Finding</th>
+                                <th>Severity</th>
+                                <th>Location</th>
+                            </tr>
+                            {
+                                "".join([
+                                    f'<tr><td>{f.title}</td><td style="color: {"red" if f.severity.value == "critical" else "orange"}; font-weight: bold;">{f.severity.value.upper()}</td><td>{f.location.filepath if f.location else "Global"}</td></tr>'
+                                    for f in analysis_result.get('critical_findings', [])[:10]
+                                ]) or "<tr><td colspan='3'>No critical quality issues found.</td></tr>"
+                            }
+                        </table>
+                    </div>
+                </div>
+
+                {
+                    "".join([
+                        f"""
+                        <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-left: 5px solid #007bff;">
+                            <h3>{p.perspective_name} Details ({p.score:.1f}%)</h3>
+                            <div style="display: flex; gap: 20px;">
+                                <div style="flex: 1;">
+                                    <h4>Dimension Scores</h4>
+                                    <ul>
+                                        {"".join([f"<li><strong>{d.name}:</strong> {d.score:.1f}%</li>" for d in p.dimensions])}
+                                    </ul>
+                                </div>
+                                <div style="flex: 2;">
+                                    <h4>Key Recommendations</h4>
+                                    <ul>
+                                        {"".join([f"<li>{rec}</li>" for rec in p.recommendations[:5]]) or "<li>Maintain current practices.</li>"}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        """
+                        for p in analysis_result.get('perspective_details', [])
+                        if p.score < 100
+                    ])
+                }
             </div>
             
             <div class="section">

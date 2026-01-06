@@ -9,7 +9,9 @@ from ai_collab_analyzer.analyzers.coupling_analyzer import CouplingAnalyzer
 from ai_collab_analyzer.analyzers.prompt_analyzer import PromptAnalyzer
 from ai_collab_analyzer.analyzers.coherence_analyzer import CoherenceAnalyzer
 from ai_collab_analyzer.analyzers.predictive_analyzer import PredictiveAnalyzer
+from ai_collab_analyzer.analyzers.multi_perspective_analyzer import MultiPerspectiveAnalyzer
 from ai_collab_analyzer.reporters.html_reporter import HTMLReporter
+from ai_collab_analyzer.visualizers.radar_chart_builder import RadarChartBuilder
 from ai_collab_analyzer.storage.database import DatabaseManager
 from ai_collab_analyzer.multi_repo.comparator import RepositoryComparator
 import subprocess
@@ -70,6 +72,10 @@ class CLI:
             predictive_analyzer = PredictiveAnalyzer()
             predictive_results = predictive_analyzer.analyze(repository)
             
+            # Run Multi-Perspective Analysis
+            perspective_analyzer = MultiPerspectiveAnalyzer()
+            perspective_results = perspective_analyzer.analyze(repository)
+            
             # Combine results
             result = {
                 **health_result,
@@ -94,7 +100,12 @@ class CLI:
                 "overall_risk_score": predictive_results.overall_risk_score,
                 "risk_scores": predictive_results.risk_scores,
                 "forecasts": predictive_results.forecasts,
-                "warnings": predictive_results.warnings
+                "warnings": predictive_results.warnings,
+                # Multi-Perspective
+                "perspective_scores": perspective_results.aggregate_scores,
+                "perspective_details": perspective_results.perspective_results,
+                "critical_findings": perspective_results.critical_findings,
+                "composite_quality_score": perspective_results.composite_score
             }
             
             print(f"  Health Score: {result.get('health_score', 'N/A'):.2f}")
@@ -104,6 +115,7 @@ class CLI:
             print(f"  Coherence Score: {result.get('coherence_score', 'N/A'):.2f}")
             print(f"  Duplication Clusters: {len(result.get('duplication_clusters', []))}")
             print(f"  Overall Risk Score: {result.get('overall_risk_score', 'N/A'):.2f}")
+            print(f"  Quality Score: {result.get('composite_quality_score', 'N/A'):.2f}")
             print(f"  Active Warnings: {len(result.get('warnings', []))}")
             
             # 3. Save to Database

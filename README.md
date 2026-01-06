@@ -69,6 +69,14 @@ python -m pytest
 - `visualizers/`: Plotly chart builders.
 - `reporters/`: HTML report generation.
 
+## Limitations
+
+- **Language Support**: Deep code analysis (AST parsing) is currently implemented only for **Python**.
+- **Restricted Metrics**: For repositories in other languages:
+  - **Code Quality Score** (Multi-Perspective Analysis) is not measured.
+  - **Code Coherence** (Architectural Analysis) is not available.
+  - All other metrics (Health, Churn, Coupling, Hotspots, and AI Prompt Extraction) remain fully functional.
+
 ## Acknowledgements & Legal Considerations
 
 This tool was inspired by techniques described in Adam Tornhill's **"Your Code as a Crime Scene"**, adapted and extended for analyzing human-AI collaboration patterns in software development.
