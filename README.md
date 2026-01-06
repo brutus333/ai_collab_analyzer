@@ -75,7 +75,7 @@ This tool was inspired by techniques described in Adam Tornhill's **"Your Code a
 
 ### Academic Foundation
 The analysis methods used in this project are based on established academic research in the field of **Mining Software Repositories (MSR)**:
-- **Change Coupling**: Based on research on temporal dependencies (Gall et al., 1998).
+- **Change Coupling**: Based on research on temporal dependencies (Gall et al., 1998) - [https://ieeexplore.ieee.org/document/738508](https://ieeexplore.ieee.org/document/738508).
 - **Code Churn**: Standard metrics for measuring software evolution.
 - **Forensic Repository Analysis**: Standard practices for identifying hotspots and architectural drift.
 
